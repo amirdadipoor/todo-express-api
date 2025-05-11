@@ -3,7 +3,8 @@ const prisma = require("../../db");
 
 exports.getAllTasks = async (req, res) => {
     try {
-        const tasks = taskActions.fetchAllTasks();
+        const tasks = await taskActions.fetchAllTasks();
+        //console.log(tasks)
         res.json(tasks);
     }catch (error) {
         res.status(500).json({error: 'Failed to retrieve tasks.' });
@@ -13,8 +14,9 @@ exports.getAllTasks = async (req, res) => {
 exports.getTaskById = async (req, res) => {
     try {
         const id = parseInt(req.params.id) ;
-        const tasks = taskActions.findTaskById(id);
-        res.json(tasks);
+        const tasks = await taskActions.findTaskById(id);
+        if (!tasks) res.status(404).json({error: 'Failed to find tasks.'});
+        else res.json(tasks);
     }catch (error) {
         res.status(500).json({error: 'Failed to retrieve tasks.' });
     }
@@ -23,7 +25,7 @@ exports.getTaskById = async (req, res) => {
 exports.createTask = async (req, res) => {
     try {
         const data = {task : req.body.task};
-        const task = await prisma.task.create(data);
+        const task = await taskActions.createTask(data);
         res.json(task);
     }catch (error) {
         res.status(500).json({error: 'Failed to create tasks.' });
@@ -33,9 +35,9 @@ exports.createTask = async (req, res) => {
 exports.deleteTask = async (req, res) => {
     try {
         const id = parseInt(req.params.id) ;
-        const tasks = taskActions.deleteTask(id)
+        const tasks = await taskActions.deleteTask(id)
         if (!tasks) res.status(404).json({error: 'Failed to delete tasks.'});
-        res.json(tasks);
+        else res.json(tasks);
     }catch (error) {
         res.status(500).json({error: 'Failed to delete lists.' });
     }
@@ -45,10 +47,10 @@ exports.updateTask = async (req, res) => {
     try {
         const id = parseInt(req.params.id) ;
         const data = {task : req.body.task};
-        const tasks = taskActions.updateTask(id , data)
-        if (!tasks) res.status(404).json({error: 'Failed to delete tasks.'});
-        res.json(tasks);
+        const tasks = await taskActions.updateTask(id , data)
+        if (!tasks) res.status(404).json({error: 'Failed to update tasks.'});
+        else res.json(tasks);
     }catch (error) {
-        res.status(500).json({error: 'Failed to retrieve lists.' });
+        res.status(500).json({error: 'Failed to update tasks.' });
     }
 }

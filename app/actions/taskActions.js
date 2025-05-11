@@ -1,7 +1,7 @@
 const prisma = require('./../../db');
 
 exports.fetchAllTasks = async () => {
-    const tasks = await prisma.task.findMany();
+    const tasks = await prisma.task.findMany({});
     return tasks;
 }
 
