@@ -46,7 +46,7 @@ exports.deleteTask = async (req, res) => {
 exports.updateTask = async (req, res) => {
     try {
         const id = parseInt(req.params.id) ;
-        const data = {task : req.body.task};
+        const data = {task : req.body.task , done : req.body.done};
         const tasks = await taskActions.updateTask(id , data)
         if (!tasks) res.status(404).json({error: 'Failed to update tasks.'});
         else res.json(tasks);
