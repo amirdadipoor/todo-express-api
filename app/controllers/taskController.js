@@ -1,5 +1,4 @@
 const taskActions = require('./../actions/taskActions');
-const prisma = require("../../db");
 
 exports.getAllTasks = async (req, res) => {
     try {
